@@ -132,6 +132,37 @@ func TestLeadingZero(t *testing.T) {
 	}
 }
 
+func TestNeighbors(t *testing.T) {
+	cases := []struct {
+		hash      string
+		neighbors []string
+	}{
+		{
+			hash: "dqcjq",
+			neighbors: []string{
+				"dqcjw",
+				"dqcjx",
+				"dqcjr",
+				"dqcjp",
+				"dqcjn",
+				"dqcjj",
+				"dqcjm",
+				"dqcjt",
+			},
+		},
+	}
+
+	for _, c := range cases {
+		neighbors := Neighbors(c.hash)
+		for i, neighbor := range neighbors {
+			expected := c.neighbors[i]
+			if neighbor != c.neighbors[i] {
+				t.Errorf("Neighbor: %v does not match expected: %v", neighbor, expected)
+			}
+		}
+	}
+}
+
 func TestNeighborsIntWithPrecision(t *testing.T) {
 	cases := []struct {
 		hash      uint64
@@ -170,10 +201,10 @@ func TestNeighborsIntWithPrecision(t *testing.T) {
 
 	for _, c := range cases {
 		neighbors := NeighborsIntWithPrecision(c.hash, c.bits)
-		for i, neighbhor := range neighbors {
+		for i, neighbor := range neighbors {
 			expected := c.neighbors[i]
-			if neighbhor != c.neighbors[i] {
-				t.Errorf("Neighbor: %v does not match expected: %v", neighbhor, expected)
+			if neighbor != c.neighbors[i] {
+				t.Errorf("Neighbor: %v does not match expected: %v", neighbor, expected)
 			}
 		}
 	}

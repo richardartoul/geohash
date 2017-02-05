@@ -135,6 +135,44 @@ func DecodeInt(hash uint64) (lat, lng float64) {
 }
 
 /*
+Neighbors returns a slice of geohash strings that correspond to the provided
+geohash's neighbors.
+*/
+func Neighbors(hash string) []string {
+	box := BoundingBox(hash)
+	lat, lng := box.Center()
+	latDelta := box.MaxLat - box.MinLat
+	lngDelta := box.MaxLng - box.MinLng
+	precision := uint(len(hash))
+	return []string{
+		// N
+		EncodeWithPrecision(lat+latDelta, lng, precision),
+		// NE,
+		EncodeWithPrecision(lat+latDelta, lng+lngDelta, precision),
+		// E,
+		EncodeWithPrecision(lat, lng+lngDelta, precision),
+		// SE,
+		EncodeWithPrecision(lat-latDelta, lng+lngDelta, precision),
+		// S,
+		EncodeWithPrecision(lat-latDelta, lng, precision),
+		// SW,
+		EncodeWithPrecision(lat-latDelta, lng-lngDelta, precision),
+		// W,
+		EncodeWithPrecision(lat, lng-lngDelta, precision),
+		// NW
+		EncodeWithPrecision(lat+latDelta, lng-lngDelta, precision),
+	}
+}
+
+/*
+NeighborsInt returns a slice of uint64's that correspond to the provided hash's
+neighbors at 64-bit precision.
+*/
+func NeighborsInt(hash uint64) []uint64 {
+	return NeighborsIntWithPrecision(hash, 64)
+}
+
+/*
 NeighborsIntWithPrecision returns a slice of uint64's that correspond to the
 provided hash's neighbors at the given precision.
 */
