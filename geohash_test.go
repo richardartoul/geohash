@@ -131,3 +131,50 @@ func TestLeadingZero(t *testing.T) {
 		t.Errorf("incorrect encoding")
 	}
 }
+
+func TestNeighborsIntWithPrecision(t *testing.T) {
+	cases := []struct {
+		hash      uint64
+		bits      uint
+		neighbors []uint64
+	}{
+		{
+			hash: 1702789509,
+			bits: 32,
+			neighbors: []uint64{
+				1702789520,
+				1702789522,
+				1702789511,
+				1702789510,
+				1702789508,
+				1702789422,
+				1702789423,
+				1702789434,
+			},
+		},
+		{
+			hash: 27898503327470,
+			bits: 46,
+			neighbors: []uint64{
+				27898503327471,
+				27898503349317,
+				27898503349316,
+				27898503349313,
+				27898503327467,
+				27898503327465,
+				27898503327468,
+				27898503327469,
+			},
+		},
+	}
+
+	for _, c := range cases {
+		neighbors := NeighborsIntWithPrecision(c.hash, c.bits)
+		for i, neighbhor := range neighbors {
+			expected := c.neighbors[i]
+			if neighbhor != c.neighbors[i] {
+				t.Errorf("Neighbor: %v does not match expected: %v", neighbhor, expected)
+			}
+		}
+	}
+}
